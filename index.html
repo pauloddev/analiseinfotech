@@ -101,6 +101,11 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
         <input id="cpf" name="cpf" type="text" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00" maxlength="14">
         <p class="err" id="e-cpf"></p>
       </div>
+      <div class="field" id="f-email">
+        <label for="email">E-mail</label>
+        <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="seuemail@exemplo.com">
+        <p class="err" id="e-email"></p>
+      </div>
       <div class="field" id="f-zap">
         <label for="zap">WhatsApp com DDD</label>
         <input id="zap" name="zap" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="(41) 9 0000-0000" maxlength="16">
@@ -162,11 +167,13 @@ $("lead").addEventListener("submit", e => {
   e.preventDefault();
   const nome = $("nome").value.trim();
   const cpf = $("cpf").value;
+  const email = $("email").value.trim();
   const zap = $("zap").value;
   let ok = true;
 
   if (nome.split(/\s+/).filter(Boolean).length < 2) { setErr("nome", "Digite seu nome e sobrenome."); ok = false; } else setErr("nome");
   if (!cpfValido(cpf)) { setErr("cpf", "Confira o CPF: ele precisa ter 11 números válidos."); ok = false; } else setErr("cpf");
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { setErr("email", "Digite um e-mail válido, por exemplo nome@gmail.com."); ok = false; } else setErr("email");
   const z = digits(zap);
   if (z.length < 10 || z.length > 11) { setErr("zap", "Digite o WhatsApp com DDD."); ok = false; } else setErr("zap");
 
@@ -176,6 +183,7 @@ $("lead").addEventListener("submit", e => {
     "Olá! Quero fazer a análise do *celular no boleto*.\n\n" +
     "*Nome:* " + nome + "\n" +
     "*CPF:* " + maskCPF(cpf) + "\n" +
+    "*E-mail:* " + email + "\n" +
     "*WhatsApp:* " + maskZap(zap);
   const url = "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(msg);
 
